@@ -1,0 +1,348 @@
+/* ==========================================================
+   CSS VARIABLES — change these to re-theme the whole game
+   ========================================================== */
+:root {
+  --bg-top: #1b1030;
+  --bg-bottom: #0d0620;
+  --panel: #ffffff0f;
+  --panel-border: #ffffff22;
+
+  --accent-x: #ff5d73;      /* player color */
+  --accent-o: #4dd9c0;      /* computer color */
+  --accent-win: #ffd23f;    /* win glow */
+
+  --text-main: #f5f3ff;
+  --text-muted: #b9b3d6;
+
+  --cell-bg: #ffffff12;
+  --cell-bg-hover: #ffffff22;
+
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  --font-display: "Poppins", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Segoe UI", system-ui, sans-serif;
+}
+
+/* ==========================================================
+   RESET / BASE
+   ========================================================== */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: radial-gradient(circle at top, var(--bg-top), var(--bg-bottom));
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-x: hidden;
+  /* prevent accidental text selection while tapping cells */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+/* ==========================================================
+   LAYOUT
+   ========================================================== */
+.game-wrap {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.header {
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 7vw, 2.4rem);
+  margin: 0 0 6px 0;
+  letter-spacing: 0.5px;
+}
+
+.title span {
+  color: var(--accent-x);
+}
+
+.status {
+  margin: 0;
+  font-size: clamp(0.9rem, 4vw, 1.05rem);
+  color: var(--text-muted);
+  min-height: 1.4em;
+  transition: color 0.25s ease;
+}
+
+.status.turn-computer {
+  color: var(--accent-o);
+}
+
+.status.turn-player {
+  color: var(--accent-x);
+}
+
+/* ==========================================================
+   SCOREBOARD
+   ========================================================== */
+.scoreboard {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  padding: 12px 10px;
+  backdrop-filter: blur(6px);
+}
+
+.score-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.score-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.score-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+}
+
+/* ==========================================================
+   BOARD
+   ========================================================== */
+.board {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  padding: 10px;
+  box-shadow: var(--shadow-soft);
+}
+
+.cell {
+  background: var(--cell-bg);
+  border: none;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 10vw, 3rem);
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.08s ease;
+  touch-action: manipulation;
+}
+
+.cell:active {
+  transform: scale(0.94);
+}
+
+.cell.filled {
+  cursor: default;
+}
+
+.cell:not(.filled):hover {
+  background: var(--cell-bg-hover);
+}
+
+.cell.x {
+  color: var(--accent-x);
+  animation: pop 0.2s ease;
+}
+
+.cell.o {
+  color: var(--accent-o);
+  animation: pop 0.2s ease;
+}
+
+.cell.win-cell {
+  background: color-mix(in srgb, var(--accent-win) 25%, transparent);
+  animation: glow 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes pop {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 0px var(--accent-win); }
+  to   { box-shadow: 0 0 18px var(--accent-win); }
+}
+
+/* ==========================================================
+   RESTART BUTTON
+   ========================================================== */
+.restart-btn {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  background: #ffffff18;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.2s ease;
+}
+
+.restart-btn:hover {
+  background: #ffffff2a;
+}
+
+.restart-btn:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================
+   POPUP OVERLAY
+   ========================================================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 2, 15, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 100;
+}
+
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.popup {
+  width: 100%;
+  max-width: 340px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(160deg, #241640, #150a2b);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  transform: scale(0.85) translateY(10px);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+}
+
+.overlay.show .popup {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.popup-image-wrap {
+  width: 100%;
+  max-width: 220px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #ffffff0a;
+  display: none; /* hidden until an image successfully loads */
+}
+
+.popup-image-wrap.has-image {
+  display: block;
+  animation: wiggle 0.6s ease;
+}
+
+.popup-image {
+  width: 100%;
+  height: auto;
+  max-height: 45vh;
+  object-fit: contain;
+  display: block;
+}
+
+@keyframes wiggle {
+  0%   { transform: rotate(0deg) scale(0.7); opacity: 0; }
+  40%  { transform: rotate(-4deg) scale(1.05); opacity: 1; }
+  60%  { transform: rotate(3deg) scale(1); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.popup-text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 6vw, 1.7rem);
+  font-weight: 700;
+}
+
+.play-again-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1b1030;
+  background: var(--accent-win);
+  border: none;
+  border-radius: 999px;
+  padding: 13px 30px;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.2s ease;
+}
+
+.play-again-btn:hover {
+  filter: brightness(1.08);
+}
+
+.play-again-btn:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================
+   SMALL SCREEN TWEAKS
+   ========================================================== */
+@media (max-height: 640px) {
+  .game-wrap {
+    gap: 12px;
+  }
+  .popup-image {
+    max-height: 32vh;
+  }
+}
